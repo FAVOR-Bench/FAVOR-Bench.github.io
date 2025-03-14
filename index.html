@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> FAVOR-Bench </title>
+
+    <link rel="icon" href="./static/images/lvbench.jpg">
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="stylesheet" href="./static/css/leaderboard.css">
+    <link rel="stylesheet" href="./static/css/video-player.css">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/explorer-index.js"></script>
+    <script src="./static/js/question_card.js"></script>
+
+    <style>
+        .js-sort-table th {
+            cursor: pointer;
+            position: relative;
+        }
+        .js-sort-table th:after {
+            content: "";
+            display: inline-block;
+            margin-left: 5px;
+            visibility: hidden;
+            width: 0;
+            height: 0;
+            vertical-align: middle;
+        }
+        .js-sort-table th.js-sort-asc:after {
+            visibility: visible;
+            content: "↓";
+            margin-left: 5px;
+            color: #3273dc;
+            font-size: 16px;
+        }
+        .js-sort-table th.js-sort-desc:after {
+            visibility: visible;
+            content: "↑";
+            margin-left: 5px;
+            color: #3273dc;
+            font-size: 16px;
+        }
+        .no-sort {
+            cursor: default !important;
+            pointer-events: none;
+        }
+        .no-sort:after {
+            display: none !important;
+        }
+        /* Maintain centering of text in table headers */
+        .js-sort-table th {
+            text-align: center;
+            position: relative;
+        }
+        /* Apply no-sort to group headers */
+        th[colspan] {
+            cursor: default !important;
+            pointer-events: none;
+        }
+        th[colspan]:after {
+            display: none !important;
+        }
+        .publication-subtitle {
+            font-size: 1.5rem !important;
+        }
+        /* 调整图片和文字之间的距离 */
+        .stat-container {
+            margin-bottom: 5px;
+        }
+        .stat-container + p {
+            margin-top: 5px;
+        }
+        /* 确保Motivation部分的图片居中 */
+        .motivation-img-container {
+            text-align: center;
+            width: 100%;
+        }
+        /* 修复滑块问题 */
+        .carousel {
+            overflow: hidden;
+            position: relative;
+        }
+        .carousel-item {
+            display: none;
+        }
+        .carousel-item.is-active {
+            display: block;
+        }
+        /* 添加统计图之间的间隔 */
+        .statistics-container {
+            margin-bottom: 40px;
+        }
+        /* Add HuggingFace icon */
+        .icon-huggingface {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23ffffff' d='M38.08 21.51a4.4 4.4 0 0 1-4.01 4.35 2.67 2.67 0 0 1-2.15-.95 2.67 2.67 0 0 1-2.15.95 4.41 4.41 0 0 1-4.01-4.35c0-2.92 2.78-5.41 5.69-8.25.48-.47 1.27-.47 1.75 0 2.91 2.84 5.69 5.33 5.69 8.25zm-21.57 0c0 2.37-1.79 4.35-4.02 4.35-.8 0-1.56-.34-2.15-.95-.59.61-1.35.95-2.15.95-2.22 0-4.01-1.98-4.01-4.35 0-2.92 2.78-5.41 5.68-8.25a1.25 1.25 0 0 1 1.75 0c2.91 2.84 5.69 5.33 5.69 8.25zm-4.02 15.6a2.99 2.99 0 1 1 0-5.96 2.99 2.99 0 0 1 0 5.96zm9 0a2.99 2.99 0 1 1 0-5.96 2.99 2.99 0 0 1 0 5.96zm9 0a2.99 2.99 0 1 1 0-5.96 2.99 2.99 0 0 1 0 5.96zm9 0a2.99 2.99 0 1 1 0-5.96 2.99 2.99 0 0 1 0 5.96zM24.5 24a4.41 4.41 0 0 0-4.01-4.35 2.67 2.67 0 0 0-2.15.95 2.67 2.67 0 0 0-2.15-.95 4.41 4.41 0 0 0-4.01 4.35c0 2.92 2.78 5.41 5.69 8.25.48.47 1.26.47 1.75 0 2.91-2.84 5.69-5.33 5.69-8.25zm14.36 0c0 2.37-1.8 4.35-4.02 4.35-.8 0-1.56-.34-2.15-.95-.59.61-1.35.95-2.15.95-2.22 0-4.01-1.98-4.01-4.35 0-2.92 2.77-5.41 5.68-8.25a1.26 1.26 0 0 1 1.76 0c2.9 2.84 5.68 5.33 5.68 8.25z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            vertical-align: middle;
+        }
+        
+        /* Particle animation canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+<!-- Canvas for particle animation -->
+<canvas id="particle-canvas"></canvas>
+
+<section class="hero">
+    <div class="hero-body">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column has-text-centered">
+                    <h1 class="title is-1 publication-title is-bold" style="font-size: 2.5rem;">
+                        <img src="static/images/favor-bench.png" style="width:100%;" alt="Logo"/>
+                    </h1>
+                    <h2 class="subtitle is-3 publication-subtitle" style="font-size: 1.5rem; margin-bottom: 20px;">
+                        A Comprehensive Benchmark for Fine-Grained Video Motion Understanding
+                    </h2>
+
+                    <div class="is-size-5 publication-authors" style="width: 90%; margin: 20px auto; font-size: 1.25rem;">
+                    </div>
+
+                    <div class="is-size-5 publication-authors" style="font-size: 1.25rem;">
+
+                    </div>
+
+                    <div class="column has-text-centered">
+                        <div class="publication-links">
+                            <!-- PDF Link. -->
+                            <span class="link-block">
+                <a href="https://arxiv.org/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span style="font-size: 1.1rem;">arXiv</span>
+                </a>
+              </span>
+                            <!-- Code Link. -->
+                            <span class="link-block">
+                <a href="https://github.com/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span style="font-size: 1.1rem;">Code</span>
+                  </a>
+              </span>
+                            <!-- Dataset Link. -->
+                            <span class="link-block">
+                <a href="https://huggingface.co/datasets/zl2048/FAVOR"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <p style="font-size:18px">🤗</p>
+                  </span>
+                  <span style="font-size: 1.1rem;">Dataset</span>
+                </a>
+              </span>
+                            <!-- Leaderboard Link. -->
+                            <span class="link-block">
+                <a href="#leaderboard"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <p style="font-size:18px">🏆</p>
+                  </span>
+                  <span style="font-size: 1.1rem;">Leaderboard</span>
+                </a>
+                                
+              </span>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="container" style="margin-bottom: 2vh;">
+        <!-- Abstract. -->
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+                <h2 class="title is-3" style="font-size: 2rem;">Introduction</h2>
+                <div class="content has-text-justified" style="font-size: 1.1rem;">
+                    Multimodal Large Language Models (MLLMs) have shown remarkable capabilities in video content understanding but still struggle with fine-grained motion comprehension. To comprehensively assess the motion understanding ability of existing MLLMs, we introduce FAVOR-Bench, comprising 1,776 videos with structured manual annotations of various motions. Our benchmark includes both close-ended and open-ended tasks. For close-ended evaluation, we carefully design 8,184 multiple-choice question-answer pairs spanning six distinct sub-tasks.  For open-ended evaluation, we develop both a novel cost-efficient LLM-free and a GPT-assisted caption assessment method, where the former can enhance benchmarking interpretability and reproducibility. Comprehensive experiments with 21 state-of-the-art MLLMs reveal significant limitations in their ability to comprehend and describe detailed temporal dynamics in video motions.  To alleviate this limitation, we further build FAVOR-Train, a dataset consisting of 17,279 videos with fine-grained motion annotations. The results of finetuning Qwen2.5-VL on FAVOR-Train yield consistent improvements on motion-related tasks of TVBench, MotionBench and our FAVOR-Bench. Comprehensive assessment results demonstrate that the proposed FAVOR-Bench and FAVOR-Train provide valuable tools to the community for developing more powerful video understanding models.
+                </div>
+            </div>
+        </div>
+        <!--/ Abstract. -->
+    </div>
+</section>
+
+<!--leader board-->
+<section class="section">
+    <div class="container">
+
+        <div class="columns is-centered">
+            <div class="column is-full has-text-centered content">
+
+                <h2 class="title is-3" id="leaderboard" style="font-size: 2rem;">Leaderboard</h2>
+                <div class="content">
+                    <p class="mt-3" style="font-size: 1.1rem;">Evaluation results on FAVOR-Bench. Click on a specific indicator (such as <strong>ALL</strong>) to view the corresponding ranking list.
+                    </p>
+
+                    <table class="js-sort-table" id="results">
+                        <thead>
+                        <tr>
+                            <th rowspan="2" class="no-sort" style="vertical-align: middle; font-size: 1.1rem;"><strong>#</strong></th>
+                            <th rowspan="2" class="no-sort" style="vertical-align: middle; font-size: 1.1rem;"><strong>Model</strong></th>
+                            <th rowspan="2" class="no-sort" style="vertical-align: middle; font-size: 1.1rem;"><strong>Date</strong></th>
+                            <th rowspan="2" class="no-sort" style="vertical-align: middle; font-size: 1.1rem;"><strong>Input</strong></th>
+                            <th colspan="7" class="no-sort" style="text-align: center; font-size: 1.1rem;"><strong>Close-Ended</strong></th>
+                            <th colspan="3" class="no-sort" style="text-align: center; font-size: 1.1rem;"><strong>Open-Ended</strong></th>
+                        </tr>
+                        <tr>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>ALL</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>AS</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>HAC</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>SAD</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>MAD</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>CM</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>NSM</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>GPT-C</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>GPT-D</strong></th>
+                            <th style="vertical-align: middle; font-size: 1.1rem;"><strong>LLM-Free</strong></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Gemini-1.5-Pro</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-04</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps*</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>49.87</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>49.22</u></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>53.73</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>48.80</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>54.85</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>41.58</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>56.25</u></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>4.52</u></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>4.68</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>52.91</u></td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>GPT-4o</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-08</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps*</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">42.09</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">40.65</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">45.10</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">42.84</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">45.48</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">36.00</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">48.44</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">4.33</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">4.01</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">49.50</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Claude-3.7-Sonnet</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2025-02</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps*</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.73</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">45.20</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.02</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">41.82</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">48.05</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.07</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">46.88</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">4.32</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>4.63</u></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.03</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Video-LLaVA-7B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2023-11</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">8 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">25.37</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">24.91</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">21.54</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">25.45</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">30.54</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">26.23</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">21.88</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.18</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.31</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">41.36</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>LLaVA-NeXT-Video-7B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-05</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">8 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">23.45</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">21.27</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">22.45</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">26.05</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">26.72</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">23.07</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">14.06</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.57</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.02</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">29.48</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>LLaVA-NeXT-Video-34B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-05</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">8 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">30.44</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">31.70</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">31.99</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">32.31</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">22.99</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">29.58</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">46.88</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.83</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.67</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.41</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Tarsier-7B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-07</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">8 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">17.46</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">12.55</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">21.16</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">17.87</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">17.93</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">22.23</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">31.25</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.47</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.80</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">46.25</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Tarsier-34B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-07</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">8 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">30.34</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">28.56</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">34.98</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">26.90</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">31.29</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">31.91</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">37.50</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.79</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.97</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">47.13</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Aria</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-10</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">8 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">34.63</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">33.33</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">41.14</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">30.14</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">35.27</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">33.21</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>59.38</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.85</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.61</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">42.78</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>LLaVA-Video-7B-Qwen2</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-10</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">64 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">38.60</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">36.14</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">41.27</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">41.28</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">44.48</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">29.58</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">46.88</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.57</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.40</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">45.41</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>LLaVA-Video-72B-Qwen2</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-10</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">64 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">46.08</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">48.35</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">47.50</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">45.25</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">51.70</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">33.02</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">53.12</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.42</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.42</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">46.06</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Tarsier2-Recap-7B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-12</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">16 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">--</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">--</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">--</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">--</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">--</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">--</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">--</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>4.60</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">4.38</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>56.58</b></td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>InternVL2.5-2B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-12</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">8 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">22.90</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">18.70</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">28.23</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">23.71</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">27.47</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">19.16</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">23.44</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.80</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.99</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.23</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>InternVL2.5-8B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-12</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">8 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">34.59</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">31.97</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">38.68</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">38.09</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">37.76</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">26.14</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">35.94</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.11</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.38</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">44.18</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>InternVL2.5-78B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2024-12</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">8 frms</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">38.54</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">38.38</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">40.62</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.05</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.65</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">29.40</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.06</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.98</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.41</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">44.01</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>VideoChat-Flash-Qwen2-7B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2025-01</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.82</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">41.90</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>48.41</u></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">42.84</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">50.95</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">35.07</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">50.00</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.25</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.55</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">40.82</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>VideoLLaMA3-2B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2025-01</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">32.98</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">28.97</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">36.60</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">34.90</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">38.01</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">28.56</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">40.62</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.14</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.98</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.29</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>VideoLLaMA3-7B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2025-01</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">41.46</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">40.20</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">44.13</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">42.42</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">48.30</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">31.53</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">42.19</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.64</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.24</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">48.63</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Qwen2.5-VL-3B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2025-01</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">37.05</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">38.45</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">38.22</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">36.64</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.75</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">29.77</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">32.81</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.77</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2.91</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">47.32</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Qwen2.5-VL-7B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2025-01</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">40.76</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.48</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.28</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.14</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.65</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">33.49</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.06</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.28</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.41</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">48.46</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Qwen2.5-VL-72B</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">2025-01</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>48.14</u></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>50.28</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">46.98</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>48.13</u></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>51.78</u></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><u>40.28</u></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">51.56</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.37</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.44</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">49.72</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;"><b>Qwen2.5-VL-7B+FAVOR-Train (Ours)</b></td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">--</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">1 fps</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">42.13</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">41.75</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">45.17</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">40.91</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">43.57</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.16</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">39.06</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.55</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">3.53</td>
+                            <td style="vertical-align: middle; font-size: 0.9rem;">56.33</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                    <p style="text-align: left; font-size: 1rem;">
+                        * Due to the API response limitations, the video input of proprietary MLLMs is restricted to 16 frames if the video is longer than 16 seconds (demoted as "1 fps*").
+                    </p>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+        <h1 class="title is-1 mathvista_other" style="font-size: 2.5rem;">
+            <span class="mathvista_other" style="vertical-align: middle">FAVOR-Bench</span>
+        </h1>
+    </div>
+</section>
+
+
+<!--Motivation-->
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths" style="width: 100%;">
+
+                <h2 class="title is-3" style="font-size: 2rem;">Motivation</h2>
+                <div class="content has-text-justified" style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="motivation-img-container">
+                        <img src="static/images/motivation.png" style="max-width: 40%;"/>
+                    </div>
+                    <div style="text-align: justify; margin-bottom: 20px; width: 80%;"></div>
+                        <p style="font-size: 1.1rem; width: 80%;">
+                            Illustration of motion understanding capabilities of proprietary and open-source MLLMs (taking GPT-4o and Qwen2-VL-72B as examples). 
+                            Both models correctly answer the coarse-grained summarization question (Task 1), but fail to resolve the fine-grained action detail question (Task 2). 
+                            For the open-ended description task (Task 3), despite required to focus on temporal dynamics, the responses emphasize static content, and the motion descriptions are either coarse-grained or contain errors.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!--Evaluation Tasks-->
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths" style="width: 100%;">
+
+                <h2 class="title is-3" style="font-size: 2rem;">Evaluation Tasks</h2>
+                <div class="content has-text-justified">
+
+                    <div>
+                        <div class="content has-text-centered">
+                            <img src="static/images/tasks.png" style="width: 70%;"/>
+                            <p style="text-align: justify; width: 80%; margin-left: auto; margin-right: auto; font-size: 1.1rem;">
+                            Overview of evaluation tasks. FAVOR-Bench comprises close-ended and open-ended evaluations.
+                            The close-ended evaluation is composed of six tasks, focusing on different aspects of fine-grained motion understanding.
+                            The open-ended evaluation comprises a GPT-assisted evaluation and a novel LLM-free framework. In the GPT-assisted evaluation, model responses are directly compared with manual captions. The LLM-free framework parses structured motion elements from responses and compares them with the structured annotations.
+                            </p>
+                            
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+
+    </div>
+</section>
+
+
+
+
+
+
+
+<!--Statistics-->
+<section>
+    <div class="columns is-centered">
+        <div class="column">
+            <div class="content has-text-centered">
+                <h2 class="title is-3" style="margin-top: 30px; font-size: 2rem;">Statistics</h2>
+
+
+                <div class="content has-text-centered statistics-container">
+                    <img src="static/images/statistics-1.png" style="width: 50%;"/>
+                    <p style="text-align: justify; margin-bottom: 10px; margin-left: auto; margin-right: auto; width: 55%; font-size: 1.1rem;">
+                        Data statistics of FAVOR-Bench.
+                        <strong>Left:</strong> Task type distribution across close-ended and open-ended evaluation in FAVOR-Bench. 
+                        <strong>Middle:</strong> Distribution of motion numbers per video. 
+                        <strong>Right:</strong> The word cloud statistics of motion vocabularies in FAVOR-Bench.
+                    </p>
+                </div>
+                
+
+
+                <div class="content has-text-centered" style="margin-top: 40px;">
+                    <img src="static/images/statistics-2.png" style="width: 50%;"/>
+                    <p style="text-align: justify; margin-bottom: 40px; margin-left: auto; margin-right: auto; width: 55%; font-size: 1.1rem;">
+                        More data statistics of FAVOR-Bench.
+                        <strong>Left:</strong> Index distribution of correct answers for the close-ended tasks. For example, ``(1)" indicates that the correct option is ranked first.
+                        <strong>Middle:</strong> Video duration distribution of FAVOR-Bench.
+                        <strong>Right:</strong> Question number distribution for videos of FAVOR-Bench.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<!--Compare-->
+<section>
+    <div class="columns is-centered">
+        <div class="column">
+            <div class="content has-text-centered">
+                <h2 class="title is-3" style="font-size: 2rem;">Benchmark Comparison</h2>
+                <img src="static/images/compare.png" alt="data-composition" style="max-width: 60%;"/>
+                <p style="text-align: justify; margin-bottom: 40px; margin-left: auto; margin-right: auto; width: 60%; font-size: 1.1rem;">
+                    Comparison of FAVOR-Bench with existing video understanding benchmarks. <strong>#Videos</strong> and <strong>#Close-Ended QA</strong> refer to the number of videos and close-ended question-answer pairs respectively.
+                    FAVOR-Bench covers wide video types (Third-Person, Ego-Centric, Simulation) while focusing on fine-grained motion understanding. 
+                    Moreover, FAVOR-Bench provides comprehensive evaluation, including close-ended QA and open-ended tasks (both GPT-assisted evaluation and our novel LLM-Free framework).
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+<!--Experiments-->
+<section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+        <h1 class="title is-1 mathvista_other" style="font-size: 2.5rem;">Experimental Results</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+
+        <div class="columns is-centered m-6">
+            <div class="column is-full has-text-centered content">
+                <h2 class="title is-3" style="font-size: 2rem;">Results on FAVOR-Bench</h2>
+                <div class="box m-5">
+                    <div class="content has-text-centered">
+                        <img src="static/images/results-1.png" alt="grade-lv" width="90%"/>
+                        <p style="text-align: justify; margin-top: 0px; font-size: 1.1rem;"> The overall performances of 21 MLLMs on FAVOR-Bench, including close-ended multiple choice and open-ended evaluation with GPT-assisted and LLM-free scores. 
+                            GPT-C and GPT-D mean correctness and detailedness scores generated by GPT-4o.
+                            The highest and second-highest results among all MLLMs are indicated in bold and underlined.
+                            Due to the API response limitations, the video input of proprietary MLLMs is restricted to 16 frames if the video is longer than 16 seconds (demoted as "1 fps*".) 
+                            Tarsier2-Recap-7B is a model specially designed for captioning and it fails to fulfill the close-ended evaluation. </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="columns is-centered m-6">
+            <div class="column is-full has-text-centered content">
+                <h2 class="title is-3" style="font-size: 2rem;">Fine-tuning with FAVOR-Train</h2>
+
+                <div class="box m-5">
+                    <div class="content has-text-centered">
+                        <img src="static/images/results-2.png" alt="" width="80%"/>
+                        <p style="text-align: justify; margin-top: 10px; font-size: 1.1rem;"> Comparison on TVBench and MotionBench with our proposed FAVOR-Train. "AVG" means the average score of all the 10 tasks of TVBench. "ALL" denotes the accuracy on all 4,018 questions of MotionBench-Dev. 
+                            Qwen2.5-VL gains considerable performance improvement from fine-tuning with FAVOR-Train. </p>
+                    </div>
+                </div>
+
+                
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!--Visualization-->
+<section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+        <h1 class="title is-1 mathvista_other" style="font-size: 2.5rem;">Question-Answer Examples</h1>
+    </div>
+</section>
+
+<section class="section">
+    <!-- <div class="container">
+        <div class="columns is-centered m-6">
+            <div class="column is-full has-text-centered content">
+                <h2 class="title is-3" style="font-size: 2rem;">Fine-Grained Structured Video Motion Annotation</h2>
+                <div class="box m-5">
+                    <div class="content has-text-centered">
+                        <img src="static/images/annotation.png" alt="structured-annotation" width="70%"/>
+                        <p style="text-align: justify; margin-top: -10px; font-size: 1.1rem;"> FAVOR-Bench provides fine-grained structured video motion annotations for each video, including camera motions, subjects (with their distinctive attributes), the motion list for each subject, and an overall caption.</p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="columns is-centered m-6">
+            <div class="column is-full has-text-centered content">
+                <!-- <h2 class="title is-3" style="font-size: 2rem;">Question-Answer Pair Examples</h2> -->
+                <div class="box m-5">
+                    <div id="question-carousel" class="carousel">
+                        <div class="item-1">
+                            <div class="content has-text-centered">
+                                <img src="static/images/question-example-1.png" alt="question-1" width="40%"/>
+                                <p style="margin-bottom: 30px; text-align: center; font-size: 1.1rem;">Examples of the Action Sequence (AS) task in the close-ended evaluation.</p>
+                            </div>
+                        </div>
+                        <div class="item-2">
+                            <div class="content has-text-centered">
+                                <img src="static/images/question-example-2.png" alt="question-2" width="40%"/>
+                                <p style="margin-bottom: 30px; text-align: center; font-size: 1.1rem;">Examples of the Holistic Action Classification (HAC) task in the close-ended evaluation.</p>
+                            </div>
+                        </div>
+                        <div class="item-3">
+                            <div class="content has-text-centered">
+                                <img src="static/images/question-example-3.png" alt="question-3" width="40%"/>
+                                <p style="margin-bottom: 30px; text-align: center; font-size: 1.1rem;">Examples of the Single Action Detail (SAD) task in the close-ended evaluation.</p>
+                            </div>
+                        </div>
+                        <div class="item-4">
+                            <div class="content has-text-centered">
+                                <img src="static/images/question-example-4.png" alt="question-4" width="40%"/>
+                                <p style="margin-bottom: 30px; text-align: center; font-size: 1.1rem;">Examples of the Multiple Action Details (MAD) task in the close-ended evaluation. </p>
+                            </div>
+                        </div>
+                        <div class="item-5">
+                            <div class="content has-text-centered">
+                                <img src="static/images/question-example-5.png" alt="question-5" width="40%"/>
+                                <p style="margin-bottom: 30px; text-align: center; font-size: 1.1rem;">Examples of the Camera Motion (CM) and Non-Subject Motion (NSM) tasks in the close-ended evaluation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+        <h1 class="title is-1 mathvista_other" id="citation" style="font-size: 2.5rem;">Citation</h1>
+    </div>
+</section>
+
+
+
+<section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+    <pre style="font-size: 0.9rem;">
+        <code>@misc{tu2025favor,
+                title={FAVOR-Bench: A Comprehensive Benchmark for Fine-Grained Video Motion Understanding},
+                author={Chongjun Tu and Lin Zhang and Pengtao Chen and Peng Ye and Xianfang Zeng and Wei Cheng and Gang Yu and Tao Chen},
+                year={2025},
+                eprint={coming soon},
+                archivePrefix={arXiv},
+                primaryClass={cs.CV}
+            }
+</code></pre>
+    </div>
+</section>
+
+<footer class="footer">
+    <!-- <div class="container"> -->
+    <div class="content has-text-centered">
+    </div>
+    <div class="columns is-centered">
+        <div class="column is-8">
+            <div class="content">
+                <p style="text-align: center; font-size: 0.9rem;">
+                    This website is adapted from <a href="https://lvbench.github.io/">LVBench</a>, licensed under a
+                    <a rel="license"
+                       href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                        Commons Attribution-ShareAlike 4.0 International License</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- </div> -->
+</footer>
+
+<script>
+    // Sort table function
+    function sortTable(table, col, reverse) {
+        var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
+            tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
+            i;
+        reverse = (reverse) ? -1 : 1;
+        tr = tr.sort(function (a, b) {
+            // Sort based on cell content
+            let aVal = a.cells[col].textContent.trim();
+            let bVal = b.cells[col].textContent.trim();
+            
+            // Handle '--' as lowest value
+            if (aVal === '--') return 1 * reverse;
+            if (bVal === '--') return -1 * reverse;
+
+            // Parse as numbers if possible
+            let aNum = parseFloat(aVal);
+            let bNum = parseFloat(bVal);
+            
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return (aNum - bNum) * reverse;
+            }
+            
+            // Fall back to string comparison
+            return aVal.localeCompare(bVal) * reverse;
+        });
+        
+        // Append each row in order
+        for(i = 0; i < tr.length; i++) tb.appendChild(tr[i]);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all sortable tables
+        const tables = document.querySelectorAll('table.js-sort-table');
+        
+        tables.forEach(function(table) {
+            // Get all th elements in the table that are not marked no-sort
+            const headers = table.querySelectorAll('th:not(.no-sort)');
+            
+            headers.forEach(function(header) {
+                header.addEventListener('click', function() {
+                    // Find the column index for sorting
+                    let colIndex = 0;
+                    let headerRow = this.parentNode;
+                    
+                    // If this is in the second row of headers
+                    if (headerRow.rowIndex === 1) {
+                        // Get the column index within this row
+                        let colIndexInRow = Array.from(headerRow.cells).indexOf(this);
+                        
+                        // Calculate the actual column index for the table
+                        colIndex = colIndexInRow + 4; // 4 is the count of columns in the first row (rowspan=2)
+                    } else {
+                        // For headers in the first row with rowspan=2
+                        colIndex = Array.from(headerRow.cells).indexOf(this);
+                    }
+                    
+                    // Determine sort direction
+                    const isAscending = !this.classList.contains('js-sort-asc');
+                    
+                    // Remove sorting classes from all headers
+                    headers.forEach(h => {
+                        h.classList.remove('js-sort-asc', 'js-sort-desc');
+                    });
+                    
+                    // Add appropriate class to the clicked header
+                    this.classList.add(isAscending ? 'js-sort-asc' : 'js-sort-desc');
+                    
+                    // Sort the table
+                    sortTable(table, colIndex, isAscending);
+                    updateRowNumbers();
+                });
+            });
+        });
+
+        // Initialize carousels with smooth transitions
+        bulmaCarousel.attach('#question-carousel', {
+            slidesToScroll: 1,
+            slidesToShow: 1,
+            infinite: true,
+            autoplay: false,
+            pauseOnHover: true
+        });
+
+        // Initial row numbering
+        updateRowNumbers();
+        
+        // Initialize the particle animation
+        initParticles();
+    });
+
+    function updateRowNumbers() {
+        const rows = document.querySelectorAll("#results tbody tr");
+        rows.forEach((row, index) => {
+            row.querySelector("td").innerText = index + 1;
+        });
+    }
+    
+    // Particle animation
+    function initParticles() {
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.color = `rgba(100, 150, 200, ${Math.random() * 0.15 + 0.05})`;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // Create particles
+        const particles = [];
+        const particleCount = Math.min(100, Math.floor(window.innerWidth * window.innerHeight / 10000));
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        // Connect particles with lines
+        function connectParticles() {
+            const maxDistance = 150;
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < maxDistance) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(100, 150, 200, ${0.1 * (1 - distance/maxDistance)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw particles
+            for (const particle of particles) {
+                particle.update();
+                particle.draw();
+            }
+            
+            // Connect particles with lines
+            connectParticles();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    }
+</script>
+
+</body>
+</html>
